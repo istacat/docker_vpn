@@ -1,0 +1,24 @@
+version: "3.8"
+services:
+
+  vpn:
+    build:
+      context: .
+      args:
+        - IP_ADDRESS=${IP_ADDRESS}
+    # restart: always
+    # environment:
+    #   - REDIS_HOST=redis
+    #   - REDIS_PORT=6379
+    volumes:
+      - ./etc/ipsec.conf:/etc/ipsec.conf
+      - ./etc/ipsec.secrets:/etc/ipsec.secrets
+    #   - ./vpn/config/ipsec.secrets:/etc/ipsec.secrets
+    #   - ./vpn/config/ipsec.d/cacerts/:/etc/ipsec.d/cacerts/
+    cap_add:
+      - NET_ADMIN
+    command: ipsec start --nofork
+    ports:
+      - 127.0.0.1:4500:4500/udp
+      - 127.0.0.1:500:500/udp
+      - 127.0.0.1:68:68
